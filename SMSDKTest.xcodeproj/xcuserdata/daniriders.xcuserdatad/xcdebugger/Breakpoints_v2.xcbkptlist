@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "E8C62469-F857-4820-90E7-0A4695060E03"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0877644B-D943-4B22-B74A-F2737EC27305"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SMSDKTest/Modules/TestViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "viewWillAppear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "14036DA3-57B5-42E7-9D38-3ABB727B9D2E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SMSDKTest/Modules/TestViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "TestViewController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EE3E3E43-6293-4ABC-ADFA-1B04C4E37F44"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SMSDKTest/Modules/TestViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "viewWillDisappear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "413734B7-603A-4F04-B802-3EBA4168BC34"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SMSDKTest/Modules/TestViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "TestViewController"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "413734B7-603A-4F04-B802-3EBA4168BC34 - bf5c35703ce9277e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ADO.TestViewController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; ADO.TestViewController"
+                  moduleName = "ADO"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/daniriders/Desktop/DATOS/demo.components.swift/SMSDKTest/Modules/TestViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "10"
+                  endingLineNumber = "10"
+                  offsetFromSymbolStart = "84">
+               </Location>
+               <Location
+                  uuid = "413734B7-603A-4F04-B802-3EBA4168BC34 - a3ade0dfbe404c30"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ADO.TestViewController.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;ADO.TestViewController&gt;"
+                  moduleName = "ADO"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/daniriders/Desktop/DATOS/demo.components.swift/SMSDKTest/Modules/TestViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "10"
+                  endingLineNumber = "10"
+                  offsetFromSymbolStart = "72">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

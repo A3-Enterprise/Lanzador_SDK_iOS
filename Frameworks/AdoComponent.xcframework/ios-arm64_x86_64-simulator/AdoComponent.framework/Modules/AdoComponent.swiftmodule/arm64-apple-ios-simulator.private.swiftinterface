@@ -1,0 +1,40 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-module-flags: -target arm64-apple-ios12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name AdoComponent
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AVFoundation
+@_exported import AdoComponent
+import Alamofire
+import CoreLocation
+import Foundation
+import SafariServices
+import Swift
+import SwiftUI
+import UIKit
+import WebKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+extension UIKit.UIDevice {
+  @_Concurrency.MainActor(unsafe) public static let modelName: Swift.String
+}
+public struct ResponseData : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PersonModel : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public protocol SMDelegate : AnyObject {
+  func completedWithResult(result: Swift.Bool, response: AdoComponent.ResponseData?)
+}
+public struct SMParams {
+  public var urlInvitation: Swift.String
+  public init(urlInvitation: Swift.String)
+}
+@_hasMissingDesignatedInitializers public class SMManager {
+  public static let customization: AdoComponent.SMManager
+  public static func initWith(delegate: any AdoComponent.SMDelegate, params: AdoComponent.SMParams) -> UIKit.UIViewController
+  @objc deinit
+}
