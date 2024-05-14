@@ -32,7 +32,7 @@ La libreria se lanza a partir del metodo initWith de la clase SMmanager, este me
 
     //MARK:- SMDelegate
     extension ViewController: SMDelegate {
-        func completedWithResult(result: Bool, response: ResultsResponse?) {
+        func completedWithResult(result: Bool, response: String?) {
             dismiss(animated: true) {
 
                 //Respuesta las salidas del SDK

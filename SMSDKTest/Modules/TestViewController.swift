@@ -60,7 +60,7 @@ class TestViewController: UIViewController {
 //MARK:- SMDelegate
 extension TestViewController: SMDelegate {
 
-    func completedWithResult(result: Bool, response: ResponseData?) {
+    func completedWithResult(result: Bool, response: String?) {
         dismiss(animated: true) {
             print("result", result)
             print("Response", response)
