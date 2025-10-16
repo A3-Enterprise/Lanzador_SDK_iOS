@@ -1,42 +1,89 @@
-# Lanzador de ejemplo para integración de la libreria SMSDK.framework
+# Lanzador de ejemplo para integración de AdoComponent.xcframework
 
-El lanzador es un ejemplo de implementación de las librerias necesarias para iniciar el proceso de validación.
+El lanzador es un ejemplo de implementación de las librerías necesarias para iniciar el proceso de validación.
+
+## Requisitos
+
+- **iOS**: 12.0+
+- **Xcode**: 16.2+
+- **Swift**: 5.10+
 
 ## Instalación
 
-Primero, añadir la librería "SMSDK.xcframework" dentro de la configuración general del Target, en la seccion de nominada como "Frameworks, Libraries and Embedded Content".
+Primero, añadir la librería "AdoComponent.xcframework" dentro de la configuración general del Target, en la sección denominada como "Frameworks, Libraries and Embedded Content".
 
-
-Asi mismo se podrán importar las siguientes librerías.
+Asi mismo se podrán importar las siguientes librerías:
 
 `import UIKit` y
 `import AdoComponent`
 
+La librería responde el resultado de la transacción en el delegate SMDelegate.
 
-La librería responde el resultado de la transacción en un objeto llamado TransactionResponse
+### Versión mínima del SDK iOS
 
-### Version minima del SDK iOS
+Cambiar la versión mínima del SDK iOS a iOS 12.0 en la ruta general del Target `Build Settings -> Deployment -> iOS Deployment Target`
 
-Cambiar la versión minima del SDK iOS a iOS 11.0 en la ruta general del Target `Build Settings -> Deployment -> iOS Deployment Target`
+## Compatibilidad
 
-### Ejemplo
+### Versión Actual: v2.0
+- **Swift**: 5.10 (compatible con Xcode 16.2)
+- **Framework**: AdoComponent v2.0
+- **Fecha**: Octubre 2024
 
-La libreria se lanza a partir del metodo initWith de la clase SMmanager, este metodo recibe un delegate y un objeto SMParams el cual contiene los parametros de lanzamiento, con una extension de la clase SMDelegate que va a ser la encargada de recibir la respuesta del SDK como se puede ver en el siguiente ejemplo
+## Funcionalidades
 
-            let params = SMParams(
-                                urlInvitation: "https://sandbox.idfactory.me/EnrollSandbox/enroll?SubCustomer=BancoOccidenteSTG&key=9f2c2cbc7f7847f7806678314ed1160b&CallBack=www.cosa.com",
-            let smManagerVC = SMManager.initWith(delegate: self, params: params)
-                smManagerVC.modalPresentationStyle = .fullScreen
-                present(smManagerVC, animated: true, completion: nil)
+### Modal de Respuesta
+El lanzador incluye un modal que se muestra al recibir la respuesta del SDK con las siguientes opciones:
+- **Nueva Invitación**: Limpia los campos y permite lanzar otra invitación
+- **Cerrar App**: Cierra completamente la aplicación
+- **Cancelar**: Solo cierra el modal
 
+## Ejemplo de Uso
 
-    //MARK:- SMDelegate
-    extension ViewController: SMDelegate {
-        func completedWithResult(result: Bool, response: String?) {
-            dismiss(animated: true) {
+La librería se lanza a partir del método initWith de la clase SMManager, este método recibe un delegate y un objeto SMParams el cual contiene los parámetros de lanzamiento, con una extensión de la clase SMDelegate que va a ser la encargada de recibir la respuesta del SDK:
 
-                //Respuesta las salidas del SDK
-            }
+```swift
+func callFaceViewController() {
+    let urlString = "https://sandbox.idfactory.me/EnrollSandbox/enroll?SubCustomer=BancoOccidenteSTG&key=9f2c2cbc7f7847f7806678314ed1160b&CallBack=www.cosa.com"
+    let params = SMParams(urlInvitation: urlString)
+    
+    if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
+        smVC.modalPresentationStyle = .fullScreen
+        present(smVC, animated: true, completion: nil)
+    }
+}
+
+// MARK: - SMDelegate
+extension TestViewController: SMDelegate {
+    func completedWithResult(result: Bool, response: String?) {
+        dismiss(animated: true) {
+            self.showResponseModal(result: result, response: response)
         }
     }
+    
+    func showResponseModal(result: Bool, response: String?) {
+        let title = result ? "✅ Éxito" : "❌ Error"
+        let message = response ?? "Sin respuesta del SDK"
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        // Botón para nueva invitación
+        alert.addAction(UIAlertAction(title: "Nueva Invitación", style: .default) { _ in
+            // Limpiar campos y permitir nueva invitación
+            self.textResult.text = ""
+            self.resultImage.image = nil
+        })
+        
+        // Botón para cerrar app
+        alert.addAction(UIAlertAction(title: "Cerrar App", style: .destructive) { _ in
+            exit(0)
+        })
+        
+        // Botón para solo cerrar modal
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true)
+    }
+}
+```
 

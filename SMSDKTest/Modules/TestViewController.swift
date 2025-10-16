@@ -62,9 +62,32 @@ extension TestViewController: SMDelegate {
 
     func completedWithResult(result: Bool, response: String?) {
         dismiss(animated: true) {
-            print("result", result)
-            print("Response", response)
+            self.showResponseModal(result: result, response: response)
         }
+    }
+    
+    func showResponseModal(result: Bool, response: String?) {
+        let title = result ? "✅ Éxito" : "❌ Error"
+        let message = response ?? "Sin respuesta del SDK"
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        // Botón para nueva invitación
+        alert.addAction(UIAlertAction(title: "Nueva Invitación", style: .default) { _ in
+            // Limpiar campos y permitir nueva invitación
+            self.textResult.text = ""
+            self.resultImage.image = nil
+        })
+        
+        // Botón para cerrar app
+        alert.addAction(UIAlertAction(title: "Cerrar App", style: .destructive) { _ in
+            exit(0)
+        })
+        
+        // Botón para solo cerrar modal
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true)
     }
 }
 
