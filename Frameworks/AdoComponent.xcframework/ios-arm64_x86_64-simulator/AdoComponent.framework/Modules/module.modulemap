@@ -1,0 +1,11 @@
+framework module AdoComponent {
+  umbrella header "AdoComponent.h"
+  export *
+
+  module * { export * }
+}
+
+module AdoComponent.Swift {
+  header "AdoComponent-Swift.h"
+  requires objc
+}
