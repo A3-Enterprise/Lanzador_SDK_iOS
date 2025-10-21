@@ -6,7 +6,7 @@ El lanzador es un ejemplo de implementación de las librerías necesarias para i
 
 - **iOS**: 12.0+
 - **Xcode**: 16.2+
-- **Swift**: 5.10+
+- **Swift**: 6.0
 
 ## Instalación
 
@@ -25,10 +25,17 @@ Cambiar la versión mínima del SDK iOS a iOS 12.0 en la ruta general del Target
 
 ## Compatibilidad
 
-### Versión Actual: v2.0
-- **Swift**: 5.10 (compatible con Xcode 16.2)
-- **Framework**: AdoComponent v2.0
-- **Fecha**: Octubre 2024
+### Versión Actual: v2.1 ✅
+- **Swift**: 6.0 (Xcode 16.2+)
+- **Framework**: AdoComponent v2.1 (Swift 6.0)
+- **Concurrency**: Compatible con @MainActor (SMDelegate)
+- **Estado**: Compilado y funcionando correctamente
+- **Fecha**: Enero 2025
+
+### Historial de Versiones
+- **v2.1**: Swift 6.0 + Swift Concurrency (@MainActor)
+- **v2.0**: Swift 5.10 (Xcode 16.2)
+- **v1.x**: Swift 5.0 (Xcode 12.3)
 
 ## Funcionalidades
 
@@ -37,6 +44,17 @@ El lanzador incluye un modal que se muestra al recibir la respuesta del SDK con 
 - **Nueva Invitación**: Limpia los campos y permite lanzar otra invitación
 - **Cerrar App**: Cierra completamente la aplicación
 - **Cancelar**: Solo cierra el modal
+
+### Swift 6 Concurrency
+El delegate SMDelegate ahora usa @MainActor para garantizar que las respuestas se manejen en el hilo principal:
+```swift
+extension TestViewController: SMDelegate {
+    // Método automáticamente ejecutado en MainActor
+    func completedWithResult(result: Bool, response: String?) {
+        // Seguro actualizar UI directamente
+    }
+}
+```
 
 ## Ejemplo de Uso
 
@@ -86,4 +104,43 @@ extension TestViewController: SMDelegate {
     }
 }
 ```
+
+## Notas Importantes
+
+### Dependencias
+- **NO instalar** Alamofire o SocketIO por separado
+- Las dependencias están embebidas en AdoComponent.xcframework
+- Usar solo "Embed & Sign" para el framework
+
+### Warnings de Fuentes (Opcional)
+Pueden aparecer warnings sobre fuentes Gilroy:
+- Son opcionales y no afectan la funcionalidad
+- El SDK usa fuentes del sistema como fallback
+- Para eliminarlos: añadir las fuentes Gilroy al proyecto
+
+## Troubleshooting
+
+### Error de Compilación
+
+1. Verificar Xcode 16.2+
+2. Limpiar proyecto: ⌘ + Shift + K
+3. Eliminar DerivedData: `rm -rf ~/Library/Developer/Xcode/DerivedData`
+4. Verificar "Embed & Sign" en el framework
+
+### Verificar Integración
+
+```swift
+import AdoComponent
+
+class TestClass {
+    func test() {
+        let params = SMParams(urlInvitation: "test")
+        print("SDK integrado correctamente")
+    }
+}
+```
+
+## Soporte
+
+Para más información, consultar el README del SDK en `/SDK_iOS/README.md`
 

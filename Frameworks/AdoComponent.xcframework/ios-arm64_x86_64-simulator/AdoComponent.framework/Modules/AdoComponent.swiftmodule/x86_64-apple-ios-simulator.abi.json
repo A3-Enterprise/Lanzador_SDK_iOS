@@ -344,7 +344,8 @@
         "genericSig": "<τ_0_0 : AnyObject>",
         "sugared_genericSig": "<Self : AnyObject>",
         "declAttributes": [
-          "AccessControl"
+          "AccessControl",
+          "Custom"
         ],
         "conformances": [
           {
@@ -647,7 +648,8 @@
             "static": true,
             "declAttributes": [
               "Final",
-              "AccessControl"
+              "AccessControl",
+              "Custom"
             ],
             "funcSelfKind": "NonMutating"
           }
@@ -674,6 +676,13 @@
             "printedName": "Escapable",
             "usr": "s:s9EscapableP",
             "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
           }
         ]
       },
@@ -724,7 +733,10 @@
         "name": "Alamofire",
         "printedName": "Alamofire",
         "declKind": "Import",
-        "moduleName": "AdoComponent"
+        "moduleName": "AdoComponent",
+        "declAttributes": [
+          "ImplementationOnly"
+        ]
       },
       {
         "kind": "Import",
@@ -1918,7 +1930,7 @@
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Foundation\/Settings\/SMConfiguration.swift",
       "kind": "StringLiteral",
-      "offset": 220,
+      "offset": 241,
       "length": 7,
       "value": "\"1.0.0\""
     },
@@ -2002,42 +2014,42 @@
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "StringLiteral",
-      "offset": 358,
+      "offset": 369,
       "length": 21,
       "value": "\"messageHandlersName\""
     },
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "StringLiteral",
-      "offset": 408,
+      "offset": 419,
       "length": 191,
       "value": "\"window.addEventListener('loadedModels', function(e) {\n    window.webkit.messageHandlers.\""
     },
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "StringLiteral",
-      "offset": 546,
+      "offset": 557,
       "length": 1,
       "value": "\".postMessage(e.data);\n});\""
     },
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 755,
+      "offset": 766,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 1060,
+      "offset": 1071,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/vm_leo\/Documents\/GitHub\/SDK_iOS\/AdoComponent\/Modules\/MainViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 543,
+      "offset": 554,
       "length": 1,
       "value": "0"
     }

@@ -12,7 +12,7 @@
 		81BE94C32812675D0000AD55 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81BE94BD2812675D0000AD55 /* LaunchScreen.storyboard */; };
 		81BE94C42812675D0000AD55 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BE94C02812675D0000AD55 /* TestViewController.swift */; };
 		81BE94C52812675D0000AD55 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81BE94C12812675D0000AD55 /* TestViewController.xib */; };
-		A4D6D83527ACDF5800AB8667 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A4D6D83427ACDF5800AB8667 /* Alamofire */; };
+
 		D37454482B4DA6FB0016A99F /* AdoComponent.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37454462B4DA6E20016A99F /* AdoComponent.xcframework */; };
 		D37454492B4DA6FB0016A99F /* AdoComponent.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D37454462B4DA6E20016A99F /* AdoComponent.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -48,7 +48,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D37454482B4DA6FB0016A99F /* AdoComponent.xcframework in Frameworks */,
-				A4D6D83527ACDF5800AB8667 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +135,6 @@
 			);
 			name = SMSDKTest;
 			packageProductDependencies = (
-				A4D6D83427ACDF5800AB8667 /* Alamofire */,
 			);
 			productName = SMSDKTest;
 			productReference = 35E08A62242C1BEB0002C98D /* ADO.app */;
@@ -167,7 +165,6 @@
 			);
 			mainGroup = 35E08A59242C1BEB0002C98D;
 			packageReferences = (
-				A4D6D83327ACDF5800AB8667 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 35E08A63242C1BEB0002C98D /* Products */;
 			projectDirPath = "";
@@ -354,6 +351,7 @@
 		35E08A77242C1BEE0002C98D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -373,13 +371,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACH_O_TYPE = staticlib;
 				OTHER_CODE_SIGN_FLAGS = "";
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xcc -Wno-error=non-modular-include-in-framework-module";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ado-tech.component3";
 				PRODUCT_NAME = ADO;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.10;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -387,6 +383,7 @@
 		35E08A78242C1BEE0002C98D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -406,13 +403,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACH_O_TYPE = staticlib;
 				OTHER_CODE_SIGN_FLAGS = "";
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xcc -Wno-error=non-modular-include-in-framework-module";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ado-tech.component3";
 				PRODUCT_NAME = ADO;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.10;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -441,22 +436,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A4D6D83327ACDF5800AB8667 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = exactVersion;
-				version = 4.9.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A4D6D83427ACDF5800AB8667 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A4D6D83327ACDF5800AB8667 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 35E08A5A242C1BEB0002C98D /* Project object */;

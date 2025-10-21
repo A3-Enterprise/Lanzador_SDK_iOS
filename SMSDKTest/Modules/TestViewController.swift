@@ -16,11 +16,9 @@ class TestViewController: UIViewController {
         if let urlString = urlInit.text, !urlString.isEmpty {
             let params = SMParams(urlInvitation: urlString)
 
-            if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
-                smManagerVC = smVC as? SMManager
-                smVC.modalPresentationStyle = .fullScreen
-                present(smVC, animated: true, completion: nil)
-            }
+            let smVC = SMManager.initWith(delegate: self, params: params)
+            smVC.modalPresentationStyle = .fullScreen
+            present(smVC, animated: true, completion: nil)
         } else {
             showAlert(title: "Error", message: "Por favor ingrese una URL válida.")
         }
