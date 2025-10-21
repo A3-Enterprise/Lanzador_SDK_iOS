@@ -62,7 +62,7 @@ La librería se lanza a partir del método initWith de la clase SMManager, este 
 
 ```swift
 func callFaceViewController() {
-    let urlString = "https://sandbox.idfactory.me/EnrollSandbox/enroll?SubCustomer=BancoOccidenteSTG&key=9f2c2cbc7f7847f7806678314ed1160b&CallBack=www.cosa.com"
+    let urlString = "https://sandbox.idfactory.me/EnrollSandbox/enroll?SubCustomer=WithHtmlTest&key=9f2c2cbc7f7847f7806678314ed1160b&CallBack=www.cosa.com"
     let params = SMParams(urlInvitation: urlString)
     
     if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
