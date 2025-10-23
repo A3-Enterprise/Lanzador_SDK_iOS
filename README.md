@@ -1,6 +1,26 @@
-# Lanzador de ejemplo para integración de AdoComponent.xcframework
+# SDK iOS - Aplicación de Ejemplo
 
-El lanzador es un ejemplo de implementación de las librerías necesarias para iniciar el proceso de validación.
+## Descripción
+Aplicación de ejemplo que demuestra la integración del SDK iOS de AdoComponent para procesos de verificación de identidad y enrollment.
+
+## Características del SDK
+
+### ✅ Comunicación Dual
+- **Eventos JavaScript**: Comunicación en tiempo real via `genieEventGeneral`
+- **URL Redirect**: Fallback automático para compatibilidad
+
+### ✅ Métodos de Respuesta
+- **`completedWithResult(result: Bool, response: String?)`**: Método principal
+  - `result: true` → Success y Pending
+  - `result: false` → Failure (solo si no implementa completedWithFailure)
+- **`completedWithFailure(response: String?)`**: Método moderno para errores
+  - Maneja Failure y Failure-liveness
+
+### ✅ Status Soportados
+- **`Success`**: Proceso completado exitosamente
+- **`Pending`**: Proceso pendiente de aprobación (requiere polling)
+- **`Failure`**: Error general en el proceso
+- **`Failure-liveness`**: Error específico de liveness
 
 ## Requisitos
 
@@ -10,18 +30,113 @@ El lanzador es un ejemplo de implementación de las librerías necesarias para i
 
 ## Instalación
 
-Primero, añadir la librería "AdoComponent.xcframework" dentro de la configuración general del Target, en la sección denominada como "Frameworks, Libraries and Embedded Content".
+1. Añadir la librería "AdoComponent.xcframework" en "Frameworks, Libraries and Embedded Content"
+2. Importar las librerías necesarias:
+```swift
+import UIKit
+import AdoComponent
+```
 
-Asi mismo se podrán importar las siguientes librerías:
+## Implementación
 
-`import UIKit` y
-`import AdoComponent`
+### Configuración del Delegate
 
-La librería responde el resultado de la transacción en el delegate SMDelegate.
+```swift
+// MARK: - SMDelegate
+extension TestViewController: SMDelegate {
+    
+    // Método principal - Success y Pending
+    func completedWithResult(result: Bool, response: String?) {
+        if result {
+            // Success o Pending
+            handleSuccessResponse(response: response)
+        } else {
+            // Failure (fallback legacy)
+            handleFailureResponse(response: response)
+        }
+    }
+    
+    // Método moderno - Failure y Failure-liveness
+    func completedWithFailure(response: String?) {
+        handleFailureResponse(response: response)
+    }
+}
+```
 
-### Versión mínima del SDK iOS
+### Parseo de Respuesta
 
-Cambiar la versión mínima del SDK iOS a iOS 12.0 en la ruta general del Target `Build Settings -> Deployment -> iOS Deployment Target`
+```swift
+private func parseResponse(_ response: String?) -> [String: Any] {
+    guard let response = response,
+          let data = response.data(using: .utf8),
+          let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        return [:]
+    }
+    return json
+}
+```
+
+### Manejo por Status
+
+```swift
+let status = responseData["status"] as? String ?? "Success"
+
+switch status {
+case "Success":
+    // Proceso completado exitosamente
+    break
+case "Pending":
+    // Proceso pendiente - implementar polling
+    break
+case "Failure":
+    // Error general
+    break
+case "Failure-liveness":
+    // Error específico de liveness
+    break
+}
+```
+
+## Uso
+
+1. **Configurar URL**: Ingresa la URL de invitación en el campo de texto
+2. **Iniciar Proceso**: Presiona el botón para iniciar la verificación
+3. **Manejar Respuesta**: El SDK llamará automáticamente al método apropiado
+
+### Ejemplos de URL
+
+**Enrollment:**
+```
+https://enrolldev.idfactory.me/enroll?SubCustomer=TestCustomer&key=abc123
+```
+
+**Verificación:**
+```
+https://enrolldev.idfactory.me/verify?SubCustomer=TestCustomer&key=xyz789
+```
+
+## Estructura de Respuesta
+
+```json
+{
+  "status": "Success|Pending|Failure|Failure-liveness",
+  "message": "Mensaje descriptivo",
+  "CSID": "ID de la sesión",
+  "token": "Token actualizado",
+  "callback": "URL de callback (opcional)",
+  "idTransaction": "ID de transacción (para Pending)"
+}
+```
+
+## Logs de Debug
+
+El SDK incluye logs detallados para debugging:
+
+```
+📱 iOS SDK: Respuesta obtenida via JavaScript Event
+📱 iOS SDK: Status SUCCESS/PENDING detectado - Status: Success
+📱 iOS SDK: Usando completedWithResult(true) - Método principal
+```
 
 ## Compatibilidad
 
@@ -32,21 +147,19 @@ Cambiar la versión mínima del SDK iOS a iOS 12.0 en la ruta general del Target
 - **Estado**: Compilado y funcionando correctamente
 - **Fecha**: Enero 2025
 
-### Historial de Versiones
-- **v2.1**: Swift 6.0 + Swift Concurrency (@MainActor)
-- **v2.0**: Swift 5.10 (Xcode 16.2)
-- **v1.x**: Swift 5.0 (Xcode 12.3)
+### Características de Compatibilidad
+- ✅ **Retrocompatible**: Funciona con implementaciones existentes
+- ✅ **Dual Communication**: JavaScript events + URL redirect fallback
+- ✅ **Flexible**: Implementa solo `completedWithResult` o ambos métodos
 
-## Funcionalidades
+## Funcionalidades del Lanzador
 
-### Modal de Respuesta
-El lanzador incluye un modal que se muestra al recibir la respuesta del SDK con las siguientes opciones:
-- **Nueva Invitación**: Limpia los campos y permite lanzar otra invitación
-- **Cerrar App**: Cierra completamente la aplicación
-- **Cancelar**: Solo cierra el modal
+### Modal de Respuesta Mejorado
+- **Ver Respuesta Completa**: Muestra el JSON completo del SDK
+- **Nueva Invitación**: Limpia los campos para otra prueba
+- **Cerrar**: Cierra el modal
 
 ### Swift 6 Concurrency
-El delegate SMDelegate ahora usa @MainActor para garantizar que las respuestas se manejen en el hilo principal:
 ```swift
 extension TestViewController: SMDelegate {
     // Método automáticamente ejecutado en MainActor
@@ -56,13 +169,11 @@ extension TestViewController: SMDelegate {
 }
 ```
 
-## Ejemplo de Uso
-
-La librería se lanza a partir del método initWith de la clase SMManager, este método recibe un delegate y un objeto SMParams el cual contiene los parámetros de lanzamiento, con una extensión de la clase SMDelegate que va a ser la encargada de recibir la respuesta del SDK:
+## Ejemplo Completo
 
 ```swift
 func callFaceViewController() {
-    let urlString = "https://sandbox.idfactory.me/EnrollSandbox/enroll?SubCustomer=WithHtmlTest&key=9f2c2cbc7f7847f7806678314ed1160b&CallBack=www.cosa.com"
+    let urlString = "https://enrolldev.idfactory.me/enroll?SubCustomer=TestCustomer&key=abc123"
     let params = SMParams(urlInvitation: urlString)
     
     if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
@@ -73,62 +184,49 @@ func callFaceViewController() {
 
 // MARK: - SMDelegate
 extension TestViewController: SMDelegate {
+    
     func completedWithResult(result: Bool, response: String?) {
         dismiss(animated: true) {
-            self.showResponseModal(result: result, response: response)
+            print("📱 iOS Lanzador: completedWithResult - result: \(result)")
+            
+            if result {
+                self.handleSuccessResponse(response: response)
+            } else {
+                self.handleFailureResponse(response: response, source: "Legacy Method")
+            }
         }
     }
     
-    func showResponseModal(result: Bool, response: String?) {
-        let title = result ? "✅ Éxito" : "❌ Error"
-        let message = response ?? "Sin respuesta del SDK"
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        // Botón para nueva invitación
-        alert.addAction(UIAlertAction(title: "Nueva Invitación", style: .default) { _ in
-            // Limpiar campos y permitir nueva invitación
-            self.textResult.text = ""
-            self.resultImage.image = nil
-        })
-        
-        // Botón para cerrar app
-        alert.addAction(UIAlertAction(title: "Cerrar App", style: .destructive) { _ in
-            exit(0)
-        })
-        
-        // Botón para solo cerrar modal
-        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
-        
-        self.present(alert, animated: true)
+    func completedWithFailure(response: String?) {
+        dismiss(animated: true) {
+            print("📱 iOS Lanzador: completedWithFailure llamado")
+            self.handleFailureResponse(response: response, source: "Modern Method")
+        }
     }
 }
 ```
 
 ## Notas Importantes
 
+- El método `completedWithFailure` es **opcional**
+- Si no se implementa, los errores van por `completedWithResult(result: false)`
+- El SDK detecta automáticamente qué métodos están implementados
+- Los logs ayudan a identificar el origen de cada respuesta
+
 ### Dependencias
 - **NO instalar** Alamofire o SocketIO por separado
 - Las dependencias están embebidas en AdoComponent.xcframework
 - Usar solo "Embed & Sign" para el framework
 
-### Warnings de Fuentes (Opcional)
-Pueden aparecer warnings sobre fuentes Gilroy:
-- Son opcionales y no afectan la funcionalidad
-- El SDK usa fuentes del sistema como fallback
-- Para eliminarlos: añadir las fuentes Gilroy al proyecto
-
 ## Troubleshooting
 
 ### Error de Compilación
-
 1. Verificar Xcode 16.2+
 2. Limpiar proyecto: ⌘ + Shift + K
 3. Eliminar DerivedData: `rm -rf ~/Library/Developer/Xcode/DerivedData`
 4. Verificar "Embed & Sign" en el framework
 
 ### Verificar Integración
-
 ```swift
 import AdoComponent
 
@@ -143,4 +241,3 @@ class TestClass {
 ## Soporte
 
 Para más información, consultar el README del SDK en `/SDK_iOS/README.md`
-
