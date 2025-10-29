@@ -1,69 +1,74 @@
-# SDK iOS - Aplicación de Ejemplo
+# SDK iOS - Guía de Integración
 
-## Descripción
-Aplicación de ejemplo que demuestra la integración del SDK iOS de AdoComponent para procesos de verificación de identidad y enrollment.
+Guía completa para integrar el SDK iOS de ID Factory en tu aplicación para procesos de verificación de identidad y enrollment.
 
-## Características del SDK
-
-### ✅ Comunicación Dual
-- **Eventos JavaScript**: Comunicación en tiempo real via `genieEventGeneral`
-- **URL Redirect**: Fallback automático para compatibilidad
-
-### ✅ Métodos de Respuesta
-- **`completedWithResult(result: Bool, response: String?)`**: Método principal
-  - `result: true` → Success y Pending
-  - `result: false` → Failure (solo si no implementa completedWithFailure)
-- **`completedWithFailure(response: String?)`**: Método moderno para errores
-  - Maneja Failure y Failure-liveness
-
-### ✅ Status Soportados
-- **`Success`**: Proceso completado exitosamente
-- **`Pending`**: Proceso pendiente de aprobación (requiere polling)
-- **`Failure`**: Error general en el proceso
-- **`Failure-liveness`**: Error específico de liveness
-
-## Requisitos
+## 📋 Requisitos
 
 - **iOS**: 12.0+
 - **Xcode**: 16.2+
 - **Swift**: 6.0
 
-## Instalación
+## 🚀 Instalación
 
-1. Añadir la librería "AdoComponent.xcframework" en "Frameworks, Libraries and Embedded Content"
-2. Importar las librerías necesarias:
+1. Añadir `AdoComponent.xcframework` en "Frameworks, Libraries and Embedded Content"
+2. Configurar como "Embed & Sign"
+3. Importar en tu código:
+
 ```swift
 import UIKit
 import AdoComponent
 ```
 
-## Implementación
+## 📦 Implementación
 
-### Configuración del Delegate
+### 1. Configurar el Delegate
+
+Implementa el protocol `SMDelegate` con los 3 handlers:
 
 ```swift
-// MARK: - SMDelegate
-extension TestViewController: SMDelegate {
+extension YourViewController: SMDelegate {
     
-    // Método principal - Success y Pending
+    // Handler para Success
     func completedWithResult(result: Bool, response: String?) {
-        if result {
-            // Success o Pending
-            handleSuccessResponse(response: response)
-        } else {
-            // Failure (fallback legacy)
-            handleFailureResponse(response: response)
+        dismiss(animated: true) {
+            print("✅ Success: Proceso completado")
+            self.handleSuccess(response: response)
         }
     }
     
-    // Método moderno - Failure y Failure-liveness
+    // Handler para Pending
+    func completedWithPending(response: String?) {
+        dismiss(animated: true) {
+            print("⏳ Pending: Requiere aprobación manual")
+            self.handlePending(response: response)
+        }
+    }
+    
+    // Handler para Failure
     func completedWithFailure(response: String?) {
-        handleFailureResponse(response: response)
+        dismiss(animated: true) {
+            print("❌ Failure: Error en el proceso")
+            self.handleFailure(response: response)
+        }
     }
 }
 ```
 
-### Parseo de Respuesta
+### 2. Iniciar el SDK
+
+```swift
+func startVerification() {
+    let urlInvitation = "https://enrolldev.idfactory.me/enroll?SubCustomer=TestCustomer&key=abc123"
+    let params = SMParams(urlInvitation: urlInvitation)
+    
+    if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
+        smVC.modalPresentationStyle = .fullScreen
+        present(smVC, animated: true, completion: nil)
+    }
+}
+```
+
+### 3. Parsear Respuestas
 
 ```swift
 private func parseResponse(_ response: String?) -> [String: Any] {
@@ -74,170 +79,191 @@ private func parseResponse(_ response: String?) -> [String: Any] {
     }
     return json
 }
-```
 
-### Manejo por Status
+private func handleSuccess(response: String?) {
+    let data = parseResponse(response)
+    let csid = data["CSID"] as? String ?? "N/A"
+    
+    print("CSID: \(csid)")
+    // Guardar CSID en tu base de datos
+    // Redirigir a pantalla de éxito
+}
 
-```swift
-let status = responseData["status"] as? String ?? "Success"
+private func handlePending(response: String?) {
+    let data = parseResponse(response)
+    let idTransaction = data["idTransaction"] as? String ?? "N/A"
+    let csid = data["CSID"] as? String ?? "N/A"
+    
+    print("Transaction ID: \(idTransaction)")
+    // Implementar polling para verificar estado
+    // Mostrar mensaje al usuario
+}
 
-switch status {
-case "Success":
-    // Proceso completado exitosamente
-    break
-case "Pending":
-    // Proceso pendiente - implementar polling
-    break
-case "Failure":
-    // Error general
-    break
-case "Failure-liveness":
-    // Error específico de liveness
-    break
+private func handleFailure(response: String?) {
+    let data = parseResponse(response)
+    let message = data["message"] as? String ?? "Error desconocido"
+    
+    print("Error: \(message)")
+    
+    // Manejar errores específicos
+    if message == "Unauthorized" {
+        // Token expirado - renovar y reintentar
+    } else if message.contains("Invitation key") {
+        // Key inválida - generar nueva
+    }
 }
 ```
 
-## Uso
+## 📡 Estructura de Respuesta
 
-1. **Configurar URL**: Ingresa la URL de invitación en el campo de texto
-2. **Iniciar Proceso**: Presiona el botón para iniciar la verificación
-3. **Manejar Respuesta**: El SDK llamará automáticamente al método apropiado
-
-### Ejemplos de URL
-
-**Enrollment:**
-```
-https://enrolldev.idfactory.me/enroll?SubCustomer=TestCustomer&key=abc123
-```
-
-**Verificación:**
-```
-https://enrolldev.idfactory.me/verify?SubCustomer=TestCustomer&key=xyz789
-```
-
-## Estructura de Respuesta
-
+### Success
 ```json
 {
-  "status": "Success|Pending|Failure|Failure-liveness",
-  "message": "Mensaje descriptivo",
-  "CSID": "ID de la sesión",
-  "token": "Token actualizado",
-  "callback": "URL de callback (opcional)",
-  "idTransaction": "ID de transacción (para Pending)"
+  "status": "Success",
+  "message": "Process completed successfully",
+  "CSID": "abc123-def456-ghi789",
+  "callback": "https://your-callback-url.com"
 }
 ```
 
-## Logs de Debug
-
-El SDK incluye logs detallados para debugging:
-
-```
-📱 iOS SDK: Respuesta obtenida via JavaScript Event
-📱 iOS SDK: Status SUCCESS/PENDING detectado - Status: Success
-📱 iOS SDK: Usando completedWithResult(true) - Método principal
-```
-
-## Compatibilidad
-
-### Versión Actual: v2.1 ✅
-- **Swift**: 6.0 (Xcode 16.2+)
-- **Framework**: AdoComponent v2.1 (Swift 6.0)
-- **Concurrency**: Compatible con @MainActor (SMDelegate)
-- **Estado**: Compilado y funcionando correctamente
-- **Fecha**: Enero 2025
-
-### Características de Compatibilidad
-- ✅ **Retrocompatible**: Funciona con implementaciones existentes
-- ✅ **Dual Communication**: JavaScript events + URL redirect fallback
-- ✅ **Flexible**: Implementa solo `completedWithResult` o ambos métodos
-
-## Funcionalidades del Lanzador
-
-### Modal de Respuesta Mejorado
-- **Ver Respuesta Completa**: Muestra el JSON completo del SDK
-- **Nueva Invitación**: Limpia los campos para otra prueba
-- **Cerrar**: Cierra el modal
-
-### Swift 6 Concurrency
-```swift
-extension TestViewController: SMDelegate {
-    // Método automáticamente ejecutado en MainActor
-    func completedWithResult(result: Bool, response: String?) {
-        // Seguro actualizar UI directamente
-    }
+### Pending
+```json
+{
+  "status": "Pending",
+  "message": "Manual review required",
+  "CSID": "abc123-def456-ghi789",
+  "idTransaction": "txn-123456",
+  "callback": "https://your-callback-url.com"
 }
 ```
 
-## Ejemplo Completo
+### Failure
+```json
+{
+  "status": "Failure",
+  "message": "Unauthorized",
+  "CSID": ""
+}
+```
+
+## 🚨 Mensajes de Error Comunes
+
+| Mensaje | Causa | Solución |
+|---------|-------|----------|
+| `"Unauthorized"` | Token expirado | Renovar token y reintentar |
+| `"Invitation key isn't valid"` | Key inválida/usada | Generar nueva key |
+| `"Deny consent"` | Usuario rechazó | Usuario debe aceptar |
+
+## 💡 Ejemplo Completo
 
 ```swift
-func callFaceViewController() {
-    let urlString = "https://enrolldev.idfactory.me/enroll?SubCustomer=TestCustomer&key=abc123"
-    let params = SMParams(urlInvitation: urlString)
+import UIKit
+import AdoComponent
+
+class VerificationViewController: UIViewController {
     
-    if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
-        smVC.modalPresentationStyle = .fullScreen
-        present(smVC, animated: true, completion: nil)
+    func startVerification(url: String) {
+        let params = SMParams(urlInvitation: url)
+        
+        if let smVC = SMManager.initWith(delegate: self, params: params) as? UIViewController {
+            smVC.modalPresentationStyle = .fullScreen
+            present(smVC, animated: true)
+        }
     }
 }
 
-// MARK: - SMDelegate
-extension TestViewController: SMDelegate {
+extension VerificationViewController: SMDelegate {
     
     func completedWithResult(result: Bool, response: String?) {
         dismiss(animated: true) {
-            print("📱 iOS Lanzador: completedWithResult - result: \(result)")
+            let data = self.parseResponse(response)
+            let csid = data["CSID"] as? String ?? ""
             
-            if result {
-                self.handleSuccessResponse(response: response)
-            } else {
-                self.handleFailureResponse(response: response, source: "Legacy Method")
-            }
+            // Guardar en base de datos
+            self.saveVerification(csid: csid)
+            
+            // Mostrar éxito
+            self.showSuccessAlert(csid: csid)
+        }
+    }
+    
+    func completedWithPending(response: String?) {
+        dismiss(animated: true) {
+            let data = self.parseResponse(response)
+            let idTransaction = data["idTransaction"] as? String ?? ""
+            
+            // Iniciar polling
+            self.startPolling(transactionId: idTransaction)
+            
+            // Mostrar mensaje
+            self.showPendingAlert(transactionId: idTransaction)
         }
     }
     
     func completedWithFailure(response: String?) {
         dismiss(animated: true) {
-            print("📱 iOS Lanzador: completedWithFailure llamado")
-            self.handleFailureResponse(response: response, source: "Modern Method")
+            let data = self.parseResponse(response)
+            let message = data["message"] as? String ?? "Error"
+            
+            // Mostrar error
+            self.showErrorAlert(message: message)
+        }
+    }
+    
+    private func parseResponse(_ response: String?) -> [String: Any] {
+        guard let response = response,
+              let data = response.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return [:]
+        }
+        return json
+    }
+}
+```
+
+## 🔄 Polling para Pending
+
+```swift
+func startPolling(transactionId: String) {
+    Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
+        self.checkTransactionStatus(transactionId: transactionId) { status in
+            if status == "Success" {
+                timer.invalidate()
+                self.showSuccessAlert(csid: "...")
+            } else if status == "Failure" {
+                timer.invalidate()
+                self.showErrorAlert(message: "Proceso rechazado")
+            }
         }
     }
 }
 ```
 
-## Notas Importantes
+## 📝 Notas Importantes
 
-- El método `completedWithFailure` es **opcional**
-- Si no se implementa, los errores van por `completedWithResult(result: false)`
-- El SDK detecta automáticamente qué métodos están implementados
-- Los logs ayudan a identificar el origen de cada respuesta
+1. **Todos los handlers son obligatorios** - Debes implementar los 3 métodos
+2. **Dismiss automático** - El SDK no cierra la vista, hazlo en el handler
+3. **Thread safety** - Los handlers se ejecutan en MainActor (Swift 6)
+4. **Parsing** - Siempre valida el JSON antes de usar los datos
 
-### Dependencias
-- **NO instalar** Alamofire o SocketIO por separado
-- Las dependencias están embebidas en AdoComponent.xcframework
-- Usar solo "Embed & Sign" para el framework
+## 🔧 Troubleshooting
 
-## Troubleshooting
-
-### Error de Compilación
+### SDK no compila
 1. Verificar Xcode 16.2+
 2. Limpiar proyecto: ⌘ + Shift + K
-3. Eliminar DerivedData: `rm -rf ~/Library/Developer/Xcode/DerivedData`
-4. Verificar "Embed & Sign" en el framework
+3. Verificar "Embed & Sign" en el framework
 
-### Verificar Integración
-```swift
-import AdoComponent
+### No se reciben eventos
+1. Verificar que implementas los 3 handlers
+2. Revisar logs en consola (buscar "📱 iOS SDK:")
+3. Verificar URL de invitación válida
 
-class TestClass {
-    func test() {
-        let params = SMParams(urlInvitation: "test")
-        print("SDK integrado correctamente")
-    }
-}
-```
+## 📞 Soporte
 
-## Soporte
+- **Email**: support@idfactory.me
+- **Documentación**: https://docs.idfactory.me
 
-Para más información, consultar el README del SDK en `/SDK_iOS/README.md`
+---
+
+**Versión SDK**: 2.1  
+**Última actualización**: Enero 2025

@@ -301,6 +301,16 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 #if defined(__OBJC__)
+@class NSString;
+
+SWIFT_PROTOCOL("_TtP12AdoComponent10SMDelegate_")
+@protocol SMDelegate
+- (void)completedWithResultWithResult:(BOOL)result response:(NSString * _Nullable)response;
+@optional
+- (void)completedWithPending:(NSString * _Nullable)response;
+- (void)completedWithFailure:(NSString * _Nullable)response;
+@end
+
 
 
 
@@ -617,6 +627,16 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 #if defined(__OBJC__)
+@class NSString;
+
+SWIFT_PROTOCOL("_TtP12AdoComponent10SMDelegate_")
+@protocol SMDelegate
+- (void)completedWithResultWithResult:(BOOL)result response:(NSString * _Nullable)response;
+@optional
+- (void)completedWithPending:(NSString * _Nullable)response;
+- (void)completedWithFailure:(NSString * _Nullable)response;
+@end
+
 
 
 

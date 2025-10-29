@@ -25,8 +25,10 @@ public struct PersonModel : Swift.Codable {
   public func encode(to encoder: any Swift.Encoder) throws
   public init(from decoder: any Swift.Decoder) throws
 }
-@_Concurrency.MainActor public protocol SMDelegate : AnyObject {
-  @_Concurrency.MainActor func completedWithResult(result: Swift.Bool, response: Swift.String?)
+@_Concurrency.MainActor @objc public protocol SMDelegate {
+  @objc @_Concurrency.MainActor func completedWithResult(result: Swift.Bool, response: Swift.String?)
+  @objc @_Concurrency.MainActor optional func completedWithPending(_ response: Swift.String?)
+  @objc @_Concurrency.MainActor optional func completedWithFailure(_ response: Swift.String?)
 }
 public struct SMParams {
   public var urlInvitation: Swift.String

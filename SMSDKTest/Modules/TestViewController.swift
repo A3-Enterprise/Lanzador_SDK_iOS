@@ -58,114 +58,26 @@ class TestViewController: UIViewController {
 //MARK:- SMDelegate
 extension TestViewController: SMDelegate {
     
-    // MÉTODO PRINCIPAL - Para Success y Pending (también legacy)
     func completedWithResult(result: Bool, response: String?) {
         dismiss(animated: true) {
-            print("📱 iOS Lanzador: completedWithResult llamado - result: \(result)")
-            
-            if result {
-                // Success o Pending
-                self.handleSuccessResponse(response: response)
-            } else {
-                // Failure (solo si no implementa completedWithFailure)
-                self.handleFailureResponse(response: response, source: "Legacy Method")
-            }
+            self.showResponse(type: "SUCCESS", response: response)
         }
     }
     
-    // NUEVO MÉTODO - Para Failure y Failure-liveness
+    func completedWithPending(response: String?) {
+        dismiss(animated: true) {
+            self.showResponse(type: "PENDING", response: response)
+        }
+    }
+    
     func completedWithFailure(response: String?) {
         dismiss(animated: true) {
-            print("📱 iOS Lanzador: completedWithFailure llamado")
-            self.handleFailureResponse(response: response, source: "Modern Method")
+            self.showResponse(type: "FAILURE", response: response)
         }
     }
     
-    // MARK: - Response Handlers
-    
-    private func handleSuccessResponse(response: String?) {
-        let responseData = parseResponse(response)
-        let status = responseData["status"] as? String ?? "Success"
-        
-        print("📱 iOS Lanzador: Procesando respuesta exitosa - Status: \(status)")
-        
-        let title: String
-        let message: String
-        
-        switch status {
-        case "Success":
-            title = "✅ Proceso Completado"
-            message = "El proceso de verificación se completó exitosamente."
-        case "Pending":
-            title = "⏳ Proceso Pendiente"
-            message = "El proceso está pendiente de aprobación. Se requiere revisión manual."
-        default:
-            title = "✅ Éxito"
-            message = "Proceso completado."
-        }
-        
-        showResponseModal(title: title, message: message, response: response, isSuccess: true)
-    }
-    
-    private func handleFailureResponse(response: String?, source: String) {
-        let responseData = parseResponse(response)
-        let status = responseData["status"] as? String ?? "Failure"
-        let errorMessage = responseData["message"] as? String ?? "Error desconocido"
-        
-        print("📱 iOS Lanzador: Procesando respuesta de error - Status: \(status) - Source: \(source)")
-        
-        let title: String
-        let message: String
-        
-        switch status {
-        case "Failure-liveness":
-            title = "❌ Error de Liveness"
-            message = "Error en la detección de vida: \(errorMessage)"
-        case "Failure":
-            title = "❌ Error en el Proceso"
-            message = "Error: \(errorMessage)"
-        default:
-            title = "❌ Error"
-            message = errorMessage
-        }
-        
-        showResponseModal(title: title, message: message, response: response, isSuccess: false)
-    }
-    
-    private func parseResponse(_ response: String?) -> [String: Any] {
-        guard let response = response,
-              let data = response.data(using: .utf8),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            return [:]
-        }
-        return json
-    }
-    
-    private func showResponseModal(title: String, message: String, response: String?, isSuccess: Bool) {
-        // Mostrar respuesta completa en el TextView
-        textResult.text = response ?? "Sin respuesta"
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        // Botón para ver respuesta completa
-        alert.addAction(UIAlertAction(title: "Ver Respuesta Completa", style: .default) { _ in
-            self.showFullResponse(response: response)
-        })
-        
-        // Botón para nueva invitación
-        alert.addAction(UIAlertAction(title: "Nueva Invitación", style: .default) { _ in
-            self.textResult.text = ""
-            self.resultImage.image = nil
-        })
-        
-        // Botón para cerrar
-        alert.addAction(UIAlertAction(title: "Cerrar", style: .cancel, handler: nil))
-        
-        self.present(alert, animated: true)
-    }
-    
-    private func showFullResponse(response: String?) {
-        let alert = UIAlertController(title: "Respuesta Completa del SDK", message: response ?? "Sin respuesta", preferredStyle: .alert)
+    private func showResponse(type: String, response: String?) {
+        let alert = UIAlertController(title: type, message: response ?? "Sin respuesta", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true)
     }
