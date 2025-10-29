@@ -307,8 +307,8 @@ SWIFT_PROTOCOL("_TtP12AdoComponent10SMDelegate_")
 @protocol SMDelegate
 - (void)completedWithResultWithResult:(BOOL)result response:(NSString * _Nullable)response;
 @optional
-- (void)completedWithPending:(NSString * _Nullable)response;
-- (void)completedWithFailure:(NSString * _Nullable)response;
+- (void)completedWithPendingWithResponse:(NSString * _Nullable)response;
+- (void)completedWithFailureWithResponse:(NSString * _Nullable)response;
 @end
 
 
@@ -633,8 +633,8 @@ SWIFT_PROTOCOL("_TtP12AdoComponent10SMDelegate_")
 @protocol SMDelegate
 - (void)completedWithResultWithResult:(BOOL)result response:(NSString * _Nullable)response;
 @optional
-- (void)completedWithPending:(NSString * _Nullable)response;
-- (void)completedWithFailure:(NSString * _Nullable)response;
+- (void)completedWithPendingWithResponse:(NSString * _Nullable)response;
+- (void)completedWithFailureWithResponse:(NSString * _Nullable)response;
 @end
 
 

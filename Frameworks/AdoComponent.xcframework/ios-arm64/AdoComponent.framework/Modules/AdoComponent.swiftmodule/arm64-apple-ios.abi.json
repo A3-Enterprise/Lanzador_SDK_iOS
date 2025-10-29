@@ -343,7 +343,7 @@
           {
             "kind": "Function",
             "name": "completedWithPending",
-            "printedName": "completedWithPending(_:)",
+            "printedName": "completedWithPending(response:)",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -366,12 +366,13 @@
               }
             ],
             "declKind": "Func",
-            "usr": "c:@M@AdoComponent@objc(pl)SMDelegate(im)completedWithPending:",
-            "mangledName": "$s12AdoComponent10SMDelegateP20completedWithPendingyySSSgF",
+            "usr": "c:@M@AdoComponent@objc(pl)SMDelegate(im)completedWithPendingWithResponse:",
+            "mangledName": "$s12AdoComponent10SMDelegateP20completedWithPending8responseySSSg_tF",
             "moduleName": "AdoComponent",
             "genericSig": "<τ_0_0 where τ_0_0 : AdoComponent.SMDelegate>",
             "sugared_genericSig": "<Self where Self : AdoComponent.SMDelegate>",
             "protocolReq": true,
+            "objc_name": "completedWithPendingWithResponse:",
             "declAttributes": [
               "Custom",
               "Optional",
@@ -384,7 +385,7 @@
           {
             "kind": "Function",
             "name": "completedWithFailure",
-            "printedName": "completedWithFailure(_:)",
+            "printedName": "completedWithFailure(response:)",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -407,12 +408,13 @@
               }
             ],
             "declKind": "Func",
-            "usr": "c:@M@AdoComponent@objc(pl)SMDelegate(im)completedWithFailure:",
-            "mangledName": "$s12AdoComponent10SMDelegateP20completedWithFailureyySSSgF",
+            "usr": "c:@M@AdoComponent@objc(pl)SMDelegate(im)completedWithFailureWithResponse:",
+            "mangledName": "$s12AdoComponent10SMDelegateP20completedWithFailure8responseySSSg_tF",
             "moduleName": "AdoComponent",
             "genericSig": "<τ_0_0 where τ_0_0 : AdoComponent.SMDelegate>",
             "sugared_genericSig": "<Self where Self : AdoComponent.SMDelegate>",
             "protocolReq": true,
+            "objc_name": "completedWithFailureWithResponse:",
             "declAttributes": [
               "Custom",
               "Optional",

@@ -27,8 +27,8 @@ public struct PersonModel : Swift.Codable {
 }
 @_Concurrency.MainActor @objc public protocol SMDelegate {
   @objc @_Concurrency.MainActor func completedWithResult(result: Swift.Bool, response: Swift.String?)
-  @objc @_Concurrency.MainActor optional func completedWithPending(_ response: Swift.String?)
-  @objc @_Concurrency.MainActor optional func completedWithFailure(_ response: Swift.String?)
+  @objc @_Concurrency.MainActor optional func completedWithPending(response: Swift.String?)
+  @objc @_Concurrency.MainActor optional func completedWithFailure(response: Swift.String?)
 }
 public struct SMParams {
   public var urlInvitation: Swift.String
