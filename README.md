@@ -153,6 +153,7 @@ private func handleFailure(response: String?) {
 | `"Unauthorized"` | Token expirado | Renovar token y reintentar |
 | `"Invitation key isn't valid"` | Key inválida/usada | Generar nueva key |
 | `"Deny consent"` | Usuario rechazó | Usuario debe aceptar |
+| `"No internet connection"` | Pérdida prolongada de conectividad | Verificar conexión a internet |
 
 ## 💡 Ejemplo Completo
 
