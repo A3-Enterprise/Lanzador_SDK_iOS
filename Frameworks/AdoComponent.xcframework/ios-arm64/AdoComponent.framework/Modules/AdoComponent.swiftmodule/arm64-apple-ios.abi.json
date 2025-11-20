@@ -675,6 +675,7 @@
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Custom",
               "AccessControl"
             ],
             "isLet": true,
@@ -740,6 +741,43 @@
               "Custom"
             ],
             "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "setWebReadyDelegate",
+            "printedName": "setWebReadyDelegate(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "(any AdoComponent.SMWebReadyDelegate)?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SMWebReadyDelegate",
+                    "printedName": "any AdoComponent.SMWebReadyDelegate",
+                    "usr": "s:12AdoComponent18SMWebReadyDelegateP"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:12AdoComponent9SMManagerC19setWebReadyDelegateyyAA05SMWebfG0_pSgFZ",
+            "mangledName": "$s12AdoComponent9SMManagerC19setWebReadyDelegateyyAA05SMWebfG0_pSgFZ",
+            "moduleName": "AdoComponent",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "Custom"
+            ],
+            "funcSelfKind": "NonMutating"
           }
         ],
         "declKind": "Class",
@@ -747,7 +785,8 @@
         "mangledName": "$s12AdoComponent9SMManagerC",
         "moduleName": "AdoComponent",
         "declAttributes": [
-          "AccessControl"
+          "AccessControl",
+          "Custom"
         ],
         "hasMissingDesignatedInitializers": true,
         "conformances": [
@@ -771,6 +810,67 @@
             "printedName": "Sendable",
             "usr": "s:s8SendableP",
             "mangledName": "$ss8SendableP"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AdoComponent"
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "SMWebReadyDelegate",
+        "printedName": "SMWebReadyDelegate",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "webContentReady",
+            "printedName": "webContentReady()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:12AdoComponent18SMWebReadyDelegateP010webContentD0yyF",
+            "mangledName": "$s12AdoComponent18SMWebReadyDelegateP010webContentD0yyF",
+            "moduleName": "AdoComponent",
+            "genericSig": "<τ_0_0 where τ_0_0 : AdoComponent.SMWebReadyDelegate>",
+            "sugared_genericSig": "<Self where Self : AdoComponent.SMWebReadyDelegate>",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "s:12AdoComponent18SMWebReadyDelegateP",
+        "mangledName": "$s12AdoComponent18SMWebReadyDelegateP",
+        "moduleName": "AdoComponent",
+        "genericSig": "<τ_0_0 : AnyObject>",
+        "sugared_genericSig": "<Self : AnyObject>",
+        "declAttributes": [
+          "AccessControl",
+          "Custom"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
           }
         ]
       },
@@ -2116,42 +2216,56 @@
     {
       "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "StringLiteral",
-      "offset": 810,
-      "length": 697,
+      "offset": 838,
+      "length": 20,
+      "value": "\"iOSWebReadyHandler\""
+    },
+    {
+      "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 954,
+      "length": 1041,
       "value": "\"\/\/ LEGACY: Mantener compatibilidad con sistema anterior\nwindow.addEventListener('loadedModels', function(e) {\n    console.log('📱 iOS SDK: Evento legacy loadedModels recibido');\n    window.webkit.messageHandlers.\""
     },
     {
       "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "StringLiteral",
-      "offset": 1103,
+      "offset": 1247,
       "length": 1,
       "value": "\".postMessage(e.data);\n});\n\n\/\/ MODERNO: Nuevo sistema de eventos del WebComponent\nwindow.addEventListener('genieEventGeneral', function(e) {\n    console.log('📱 iOS SDK: Evento moderno genieEventGeneral recibido');\n    window.webkit.messageHandlers.\""
     },
     {
       "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "StringLiteral",
-      "offset": 1452,
+      "offset": 1596,
       "length": 1,
-      "value": "\".postMessage(e.detail);\n});\""
+      "value": "\".postMessage(e.detail);\n});\n\n\/\/ WEB READY: Escuchar cuando el contenido está listo\nwindow.addEventListener('webContentReady', function(e) {\n    console.log('📱 iOS SDK: Evento webContentReady recibido');\n    window.webkit.messageHandlers.\""
+    },
+    {
+      "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 1931,
+      "length": 1,
+      "value": "\".postMessage({status: 'ready'});\n});\""
     },
     {
       "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 1663,
+      "offset": 2151,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 1968,
+      "offset": 2456,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Volumes\/My Shared Files\/Home\/Visual Studio Code\/SDK_iOS\/AdoComponent\/Modules\/LivenessWebViewController.swift",
       "kind": "BooleanLiteral",
-      "offset": 2196,
+      "offset": 2684,
       "length": 5,
       "value": "false"
     },

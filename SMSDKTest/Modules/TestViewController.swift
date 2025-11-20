@@ -5,6 +5,7 @@ class TestViewController: UIViewController {
     
     @IBOutlet weak var resultImage: UIImageView!
     var smManagerVC: SMManager?
+    private var customLoader: UIActivityIndicatorView?
 
     @IBOutlet weak var urlInit: UITextField!
     @IBOutlet weak var textResult: UITextView!
@@ -12,16 +13,55 @@ class TestViewController: UIViewController {
     
     //MARK: Functions
     func callFaceViewController(documentType: String) {
-
         if let urlString = urlInit.text, !urlString.isEmpty {
-            let params = SMParams(urlInvitation: urlString)
-
-            let smVC = SMManager.initWith(delegate: self, params: params)
-            smVC.modalPresentationStyle = .fullScreen
-            present(smVC, animated: true, completion: nil)
+            startSDKProcess(urlString: urlString)
         } else {
             showAlert(title: "Error", message: "Por favor ingrese una URL válida.")
         }
+    }
+    
+    // Método avanzado con control de loader
+    private func startSDKProcess(urlString: String) {
+        // 1. Mostrar loader personalizado
+        showCustomLoader()
+        
+        // 2. Configurar delegate para ocultar loader cuando esté listo
+        SMManager.setWebReadyDelegate(self)
+        
+        // 3. Iniciar SDK
+        let params = SMParams(urlInvitation: urlString)
+        let smVC = SMManager.initWith(delegate: self, params: params)
+        smVC.modalPresentationStyle = .fullScreen
+        present(smVC, animated: true, completion: nil)
+    }
+    
+    private func showCustomLoader() {
+        if #available(iOS 13.0, *) {
+            customLoader = UIActivityIndicatorView(style: .large)
+        } else {
+            customLoader = UIActivityIndicatorView(style: .whiteLarge)
+        }
+        if #available(iOS 13.0, *) {
+            customLoader?.color = .systemBlue
+        } else {
+            customLoader?.color = .blue
+        }
+        customLoader?.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let loader = customLoader {
+            view.addSubview(loader)
+            NSLayoutConstraint.activate([
+                loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                loader.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+            loader.startAnimating()
+        }
+    }
+    
+    private func hideCustomLoader() {
+        customLoader?.stopAnimating()
+        customLoader?.removeFromSuperview()
+        customLoader = nil
     }
     
     func showAlert(title: String, message: String) {
@@ -55,6 +95,14 @@ class TestViewController: UIViewController {
     }
 }
 
+//MARK:- SMWebReadyDelegate
+extension TestViewController: SMWebReadyDelegate {
+    func webContentReady() {
+        print("📱 Lanzador iOS: WebContent listo - Ocultando loader personalizado")
+        hideCustomLoader()
+    }
+}
+
 //MARK:- SMDelegate
 extension TestViewController: SMDelegate {
     
@@ -77,6 +125,9 @@ extension TestViewController: SMDelegate {
     }
     
     private func showResponse(type: String, response: String?) {
+        // Limpiar campo URL después de cada proceso
+        urlInit.text = ""
+        
         let alert = UIAlertController(title: type, message: response ?? "Sin respuesta", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true)

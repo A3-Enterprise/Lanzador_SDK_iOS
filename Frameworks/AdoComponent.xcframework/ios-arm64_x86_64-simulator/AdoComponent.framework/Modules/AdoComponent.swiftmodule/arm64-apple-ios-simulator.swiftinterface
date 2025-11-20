@@ -34,8 +34,13 @@ public struct SMParams {
   public var urlInvitation: Swift.String
   public init(urlInvitation: Swift.String)
 }
-@_hasMissingDesignatedInitializers public class SMManager : @unchecked Swift.Sendable {
-  public static let customization: AdoComponent.SMManager
+@_hasMissingDesignatedInitializers @_Concurrency.MainActor public class SMManager {
+  @_Concurrency.MainActor public static let customization: AdoComponent.SMManager
   @_Concurrency.MainActor public static func initWith(delegate: any AdoComponent.SMDelegate, params: AdoComponent.SMParams) -> UIKit.UIViewController
+  @_Concurrency.MainActor public static func setWebReadyDelegate(_ delegate: (any AdoComponent.SMWebReadyDelegate)?)
   @objc deinit
 }
+@_Concurrency.MainActor public protocol SMWebReadyDelegate : AnyObject {
+  @_Concurrency.MainActor func webContentReady()
+}
+extension AdoComponent.SMManager : Swift.Sendable {}
