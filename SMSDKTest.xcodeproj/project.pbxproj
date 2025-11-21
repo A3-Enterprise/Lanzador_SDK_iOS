@@ -12,7 +12,6 @@
 		81BE94C32812675D0000AD55 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81BE94BD2812675D0000AD55 /* LaunchScreen.storyboard */; };
 		81BE94C42812675D0000AD55 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BE94C02812675D0000AD55 /* TestViewController.swift */; };
 		81BE94C52812675D0000AD55 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81BE94C12812675D0000AD55 /* TestViewController.xib */; };
-
 		D37454482B4DA6FB0016A99F /* AdoComponent.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37454462B4DA6E20016A99F /* AdoComponent.xcframework */; };
 		D37454492B4DA6FB0016A99F /* AdoComponent.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D37454462B4DA6E20016A99F /* AdoComponent.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -357,7 +356,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7G8DU5448M;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -389,7 +388,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 7G8DU5448M;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -434,12 +433,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 35E08A5A242C1BEB0002C98D /* Project object */;
 }

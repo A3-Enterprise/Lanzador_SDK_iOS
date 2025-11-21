@@ -6,6 +6,8 @@ class TestViewController: UIViewController {
     @IBOutlet weak var resultImage: UIImageView!
     var smManagerVC: SMManager?
     private var customLoader: UIActivityIndicatorView?
+    private var sdkViewController: UIViewController?
+    private var loaderWindow: UIWindow?
 
     @IBOutlet weak var urlInit: UITextField!
     @IBOutlet weak var textResult: UITextView!
@@ -22,20 +24,42 @@ class TestViewController: UIViewController {
     
     // Método avanzado con control de loader
     private func startSDKProcess(urlString: String) {
-        // 1. Mostrar loader personalizado
-        showCustomLoader()
+        // 1. Mostrar loader en ventana separada
+        showLoaderWindow()
         
-        // 2. Configurar delegate para ocultar loader cuando esté listo
+        // 2. Configurar delegate
         SMManager.setWebReadyDelegate(self)
         
-        // 3. Iniciar SDK
+        // 3. Crear y presentar SDK
         let params = SMParams(urlInvitation: urlString)
         let smVC = SMManager.initWith(delegate: self, params: params)
         smVC.modalPresentationStyle = .fullScreen
+        sdkViewController = smVC
+        
+        // 4. Presentar SDK (loader permanece visible)
         present(smVC, animated: true, completion: nil)
     }
     
-    private func showCustomLoader() {
+    private func showLoaderWindow() {
+        // Crear ventana separada para el loader
+        if #available(iOS 13.0, *) {
+            if let windowScene = view.window?.windowScene {
+                loaderWindow = UIWindow(windowScene: windowScene)
+            } else {
+                loaderWindow = UIWindow(frame: UIScreen.main.bounds)
+            }
+        } else {
+            loaderWindow = UIWindow(frame: UIScreen.main.bounds)
+        }
+        
+        loaderWindow?.windowLevel = UIWindow.Level.alert + 1
+        loaderWindow?.backgroundColor = view.backgroundColor ?? .white
+        
+        // Crear vista contenedora
+        let containerView = UIView()
+        containerView.backgroundColor = view.backgroundColor ?? .white
+        
+        // Crear loader
         if #available(iOS 13.0, *) {
             customLoader = UIActivityIndicatorView(style: .large)
         } else {
@@ -48,20 +72,30 @@ class TestViewController: UIViewController {
         }
         customLoader?.translatesAutoresizingMaskIntoConstraints = false
         
-        if let loader = customLoader {
-            view.addSubview(loader)
+        if let window = loaderWindow, let loader = customLoader {
+            containerView.addSubview(loader)
+            window.rootViewController = UIViewController()
+            window.rootViewController?.view = containerView
+            
             NSLayoutConstraint.activate([
-                loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                loader.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                loader.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                loader.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
             ])
+            
             loader.startAnimating()
+            window.makeKeyAndVisible()
         }
     }
     
     private func hideCustomLoader() {
-        customLoader?.stopAnimating()
-        customLoader?.removeFromSuperview()
-        customLoader = nil
+        UIView.animate(withDuration: 0.3, animations: {
+            self.loaderWindow?.alpha = 0.0
+        }) { _ in
+            self.customLoader?.stopAnimating()
+            self.loaderWindow?.isHidden = true
+            self.loaderWindow = nil
+            self.customLoader = nil
+        }
     }
     
     func showAlert(title: String, message: String) {
@@ -99,7 +133,11 @@ class TestViewController: UIViewController {
 extension TestViewController: SMWebReadyDelegate {
     func webContentReady() {
         print("📱 Lanzador iOS: WebContent listo - Ocultando loader personalizado")
-        hideCustomLoader()
+        
+        // Ocultar overlay para revelar SDK que está por debajo
+        DispatchQueue.main.async {
+            self.hideCustomLoader()
+        }
     }
 }
 
